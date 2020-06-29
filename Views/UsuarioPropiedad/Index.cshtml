@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Propietarios de una propiedad";
+    Layout = "_Layout";
+}
+@using System.Data;
+@model MunicipalidadDM.Entities.PropiedadEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h3>Usuarios de una propiedad</h3>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item nav-link small text-uppercase active" id="liCliente">
+                <a href="#ClienteTab" id="clienteButton" data-toggle="tab"><h5>Propiedades</h5></a>
+            </li>
+            <li class="nav-item nav-link small text-uppercase" id="liConsulta">
+                <a href="#ConsultaTab" id="consultaButton" data-toggle="tab"><h5>Consulta</h5></a>
+            </li>
+        </ul>
+
+        <div class="tab-content ">
+            <div class="tab-pane active" id="ClienteTab">
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_propietario">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Num Finca</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        @for (int i = 0; i < Model.PropiedadDB.Rows.Count; i++)
+                        {
+                            var numFinca = @Model.PropiedadDB.Rows[i]["numFinca"].ToString();
+                            var direccion = @Model.PropiedadDB.Rows[i]["direccion"].ToString();
+                            <tr>
+                                <th scope="row">@Model.PropiedadDB.Rows[i]["id"].ToString()</th>
+                                <td>@numFinca</td>
+                                <th>@Model.PropiedadDB.Rows[i]["valor"].ToString()</th>
+                                <th>@direccion</th>
+                                <td>
+                                    <center><a id="@Model.PropiedadDB.Rows[i]["id"].ToString()" class="btn btn-primary" onclick="getPropietarios(this.id,'@numFinca','@direccion'); return false;"><span class="fas fa-check" aria-hidden="true"></span></a></center>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="ConsultaTab">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <p id="numCodigo">Id: </p>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <p id="numFinca">Num Finca: </p>
+                    </div>
+                    <div class="form-group col-md-7">
+                        <p id="direccion">Dirección: </p>
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_propietario">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyPropiedades">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $("#fondoBody").removeAttr('style');
+        $(document).ready(function () {
+            $('#tbl_propietario').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "bSort": false,
+                dom: 'Bfrtip',
+            });
+        });
+        function getPropietarios(id, numFinca,direccion) {
+            document.getElementById("consultaButton").click();
+            $("#numCodigo").text('Id: ' + id);
+            $("#numFinca").text('Num Finca: ' + numFinca);
+            $("#direccion").text('Dirección: ' + direccion);
+            $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
+                url: "../../UsuarioPropiedad/GetUsuarios",
+                type: "POST",
+                dataType: "json",
+                data: { IdPropiedad: id },
+                success: function (result) {
+                    var registros = result;
+                    html = "";
+                    //alert(fechaActual);
+                    for (var i = 0; i < registros.length; i++) {
+                        html += "<tr>";
+                        html += "<td>" + registros[i]["id"] + "</td>";
+                        html += "<td>" + registros[i]["nombre"] + "</td>";
+                    };
+                    $("#tbodyPropiedades").html(html);
+                    $('#tbl_propiedades').DataTable({
+                        destroy: true,
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                        },
+                        "bSort": false,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copyHtml5'
+                        ]
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+

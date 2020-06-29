@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+@using Microsoft.AspNetCore.Http;
+@using System.Data;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <title>Municipalidad DM</title>
+    <link rel="stylesheet" href="~/CDNfiles/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/styleMenu.css" asp-append-version="true">
+    <script defer src="~/CDNfiles/solid.js"></script>
+    <script defer src="~/CDNfiles/fontawesome.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/fondo.css" asp-append-version="true">
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/estiloChecksbox.css">
+</head>
+
+<body id="fondoBody" style="background:-webkit-linear-gradient(top, #001168,#0400d3, #001fff);">
+
+    <div class="wrapper">
+        <nav id="sidebar" class=".wrap-login100">
+            <div class="sidebar-header text-center">
+                <a asp-controller="Inicio" asp-action="Index">
+                    <img src="~/img/logo.png" style="height: 50px;">
+                </a>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#consultaSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-columns"></i>
+                        Consultas
+                    </a>
+                    <ul class="collapse list-unstyled" id="consultaSubmenu">
+                        <li>
+                            <a asp-controller="propiedadPropietario" asp-action="Index">Propiedades de un propietario</a>
+                        </li>
+                        <li>
+                            <a asp-controller="PropietarioPropiedad" asp-action="Index">Propietario de una propiedad</a>
+                        </li>
+                        <li>
+                            <a asp-controller="PropiedadUsuario" asp-action="Index">Propiedades que puede ver un usuario</a>
+                        </li>
+                        <li>
+                            <a asp-controller="UsuarioPropiedad" asp-action="Index">Usuario de una propiedad</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <a href="#mantenimientoSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-cogs"></i>
+                        Mantenimiento
+                    </a>
+                    <ul class="collapse list-unstyled" id="mantenimientoSubmenu">
+                        <li>
+                            <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Propiedad" asp-action="Index">Propiedades</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Propietario" asp-action="Index">Propietarios</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <a href="#relacionesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-link"></i>
+                        Relaciones de Entidades
+                    </a>
+                    <ul class="collapse list-unstyled" id="relacionesSubmenu">
+                        <li>
+                            <a asp-controller="PropietarioVsPropiedad" asp-action="Index">Propietarios vs Propiedades</a>
+                        </li>
+                        <li>
+                            <a asp-controller="UsuarioVsPropiedad" asp-action="Index">Usuarios vs Propiedades</a>
+                        </li>
+                        <li>
+                            <a asp-controller="PropiedadVsConceptoCobro" asp-action="Index">Propiedades vs ConceptoCobro</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active invisible">
+                    <a href="#SpSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-cubes"></i>
+                        Inserción de datos XML
+                    </a>
+                    <ul class="collapse list-unstyled" id="SpSubmenu">
+                        <li>
+                            <a id="idTipodoc">Tipo de documentos</a>
+                        </li>
+                        <li>
+                            <a id="idCC">Conceptos de cobro</a>
+                        </li>
+                        <li>
+                            <a id="idOperacion">Operaciones</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+        </nav>
+
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-justify"></i>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <div class="collapse navbar-collapse invisible" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"></a>
+                            </li>
+                            @*<li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Index">Salir</a>
+                                </li>*@
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/CDNfiles/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+        $("#idTipodoc").click(function () {
+            $.ajax({
+                url: "../../SPXML/TipoDoc",
+                type: "POST",
+                dataType: "json",
+                success: function (respuesta) {
+                    location.reload();
+                }
+            })
+            alertify.success('Insercion realizada correctamente.');
+
+        });
+        $("#idCC").click(function () {
+            $.ajax({
+                url: "../../SPXML/ConceptosCobro",
+                type: "POST",
+                dataType: "json",
+                success: function (respuesta) {
+                    location.reload();
+                }
+            })
+            alertify.success('Insercion realizada correctamente.');
+        });
+        $("#idOperacion").click(function () {
+            $.ajax({
+                url: "../../SPXML/Operaciones",
+                type: "POST",
+                dataType: "json",
+                success: function (respuesta) {
+                    location.reload();
+                }
+            })
+            alertify.success('Insercion realizada correctamente.');
+        });
+    </script>
+</body>
+
+</html>
+

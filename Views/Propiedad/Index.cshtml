@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewData["Title"] = "Propiedades";
+    Layout = "_Layout";
+}
+@using System.Data;
+@model MunicipalidadDM.Entities.PropiedadEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h3>Propiedades</h3>
+        <button type="button" class="btn btn-primary" onclick="limpiaModal()">
+            Agregar Propiedad
+        </button>
+        <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_propiedad">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Num Finca</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Dirección</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @for (int i = 0; i < Model.PropiedadDB.Rows.Count; i++)
+                {
+                    var numFinca = @Model.PropiedadDB.Rows[i]["numFinca"].ToString();
+                    var direccion = @Model.PropiedadDB.Rows[i]["direccion"].ToString();
+                    var id=@Model.PropiedadDB.Rows[i]["id"].ToString();
+                    var valor=@Model.PropiedadDB.Rows[i]["valor"].ToString();
+                    <tr>
+                        <th scope="row">@Model.PropiedadDB.Rows[i]["id"].ToString()</th>
+                        <td>@numFinca</td>
+                        <th>@valor</th>
+                        <th>@direccion</th>
+                        <td>
+                            <center>
+                                <a id="@id" class="btn btn-primary" onclick="getDatosPropiedad(this.id, '@numFinca', '@direccion','@valor'); return false;"><span class="fas fa-edit" aria-hidden="true"></span></a>
+                                <a id="@id" class="btn btn-danger" onclick="deletePropiedad(this.id); return false;"><span class="fas fa-trash" aria-hidden="true"></span></a>
+                            </center>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="addPropiedad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Agregar Propiedad</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="NumFinca">Num Finca</label>
+                            <input type="text" class="form-control" name="NumFinca" id="NumFinca" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="Direccion">Direccion</label>
+                            <input type="text" class="form-control" name="Direccion" id="Direccion" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="Valor">Valor</label>
+                            <input type="number" class="form-control" name="Valor" id="Valor" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" onclick="determinaAccion()">Guardar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/propiedad.js" asp-append-version="true"></script>
+</body>
+</html>
+
+
+
+

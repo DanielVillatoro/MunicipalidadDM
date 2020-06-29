@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "_Layout";
+}
+@using System.Data;
+@model MunicipalidadDM.Entities.UsuarioEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h3>Usuarios</h3>
+        <button type="button" class="btn btn-primary" onclick="limpiaModal()">
+            Agregar Usuario
+        </button>
+        <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_usuario">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @for (int i = 0; i < Model.UsuarioDB.Rows.Count; i++)
+                {
+                    var id = @Model.UsuarioDB.Rows[i]["id"].ToString();
+                    var nombre = @Model.UsuarioDB.Rows[i]["nombre"].ToString();
+                    var contrasena = @Model.UsuarioDB.Rows[i]["password"].ToString();
+                    <tr>
+                        <th scope="row">@id</th>
+                        <td>@nombre</td>
+                        <th>@Model.UsuarioDB.Rows[i]["tipoUsuario"].ToString()</th>
+                        <td>
+                            <center>
+                                <a id="@id" class="btn btn-primary" onclick="getDatosCliente(this.id, '@nombre', '@contrasena'); return false;"><span class="fas fa-edit" aria-hidden="true"></span></a>
+                                <a id="@id" class="btn btn-danger" onclick="deleteUser(this.id); return false;"><span class="fas fa-trash" aria-hidden="true"></span></a>
+                            </center>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="addUsuario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Agregar Usuario</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="Usuario">Usuario</label>
+                            <input type="text" class="form-control" name="Usuario" id="Usuario" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="Contrasena">Contraseña</label>
+                            <input type="password" class="form-control" name="Contrasena" id="Contrasena" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="tipoRol">Tipo Rol</label>
+                            <select class="form-control" id="tipoRol">
+                                <option value="administrador">Administrador</option>
+                                <option value="cliente">Usuario</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="addEdit" class="btn btn-primary" onclick="determinaAccion()">Guardar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/usuario.js" asp-append-version="true"></script>
+</body>
+</html>
+
+
+
+
