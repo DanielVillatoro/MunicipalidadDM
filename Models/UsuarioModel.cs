@@ -46,5 +46,14 @@ namespace MunicipalidadDM.Models
             ada.Fill(datos);
             return datos;
         }
+
+        public DataTable GetRecibos(string idUsuario,string idPropiedad)
+        {
+            DataTable datos = new DataTable();
+            SqlCommand query = new SqlCommand(string.Format("EXEC GetRecibosPropiedadesUsuario " + Convert.ToInt32(idUsuario)+","+ Convert.ToInt32(idPropiedad)), ConexionBD.ObtenerConexion());
+            SqlDataAdapter ada = new SqlDataAdapter(query);
+            ada.Fill(datos);
+            return datos;
+        }
     }
 }

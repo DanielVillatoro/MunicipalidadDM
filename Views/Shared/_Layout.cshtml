@@ -44,54 +44,69 @@
                         Consultas
                     </a>
                     <ul class="collapse list-unstyled" id="consultaSubmenu">
-                        <li>
-                            <a asp-controller="propiedadPropietario" asp-action="Index">Propiedades de un propietario</a>
-                        </li>
-                        <li>
-                            <a asp-controller="PropietarioPropiedad" asp-action="Index">Propietario de una propiedad</a>
-                        </li>
-                        <li>
-                            <a asp-controller="PropiedadUsuario" asp-action="Index">Propiedades que puede ver un usuario</a>
-                        </li>
-                        <li>
-                            <a asp-controller="UsuarioPropiedad" asp-action="Index">Usuario de una propiedad</a>
-                        </li>
+                        @if (Context.Session.GetString("TipoUsuario").Equals("admin"))
+                        {
+                            <li>
+                                <a asp-controller="propiedadPropietario" asp-action="Index">Propiedades de un propietario</a>
+                            </li>
+                            <li>
+                                <a asp-controller="PropietarioPropiedad" asp-action="Index">Propietario de una propiedad</a>
+                            </li>
+                            <li>
+                                <a asp-controller="PropiedadUsuario" asp-action="Index">Propiedades que puede ver un usuario</a>
+                            </li>
+                            <li>
+                                <a asp-controller="UsuarioPropiedad" asp-action="Index">Usuario de una propiedad</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="PropiedadUsuarioCliente" asp-action="Index">Ver Propiedades</a>
+                            </li>
+                        }
                     </ul>
                 </li>
-                <li class="active">
-                    <a href="#mantenimientoSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="fas fa-cogs"></i>
-                        Mantenimiento
-                    </a>
-                    <ul class="collapse list-unstyled" id="mantenimientoSubmenu">
-                        <li>
-                            <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
-                        </li>
-                        <li>
-                            <a asp-controller="Propiedad" asp-action="Index">Propiedades</a>
-                        </li>
-                        <li>
-                            <a asp-controller="Propietario" asp-action="Index">Propietarios</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="#relacionesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="fas fa-link"></i>
-                        Relaciones de Entidades
-                    </a>
-                    <ul class="collapse list-unstyled" id="relacionesSubmenu">
-                        <li>
-                            <a asp-controller="PropietarioVsPropiedad" asp-action="Index">Propietarios vs Propiedades</a>
-                        </li>
-                        <li>
-                            <a asp-controller="UsuarioVsPropiedad" asp-action="Index">Usuarios vs Propiedades</a>
-                        </li>
-                        <li>
-                            <a asp-controller="PropiedadVsConceptoCobro" asp-action="Index">Propiedades vs ConceptoCobro</a>
-                        </li>
-                    </ul>
-                </li>
+                @if (Context.Session.GetString("TipoUsuario").Equals("admin"))
+                {
+                    <li class="active">
+                        <a href="#mantenimientoSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <i class="fas fa-cogs"></i>
+                            Mantenimiento
+                        </a>
+                        <ul class="collapse list-unstyled" id="mantenimientoSubmenu">
+                            <li>
+                                <a asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                            </li>
+                            <li>
+                                <a asp-controller="Propiedad" asp-action="Index">Propiedades</a>
+                            </li>
+                            <li>
+                                <a asp-controller="Propietario" asp-action="Index">Propietarios</a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetString("TipoUsuario").Equals("admin"))
+                {
+                    <li class="active">
+                        <a href="#relacionesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <i class="fas fa-link"></i>
+                            Relaciones de Entidades
+                        </a>
+                        <ul class="collapse list-unstyled" id="relacionesSubmenu">
+                            <li>
+                                <a asp-controller="PropietarioVsPropiedad" asp-action="Index">Propietarios vs Propiedades</a>
+                            </li>
+                            <li>
+                                <a asp-controller="UsuarioVsPropiedad" asp-action="Index">Usuarios vs Propiedades</a>
+                            </li>
+                            <li>
+                                <a asp-controller="PropiedadVsConceptoCobro" asp-action="Index">Propiedades vs ConceptoCobro</a>
+                            </li>
+                        </ul>
+                    </li>
+                }
                 <li class="active invisible">
                     <a href="#SpSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                         <i class="fas fa-cubes"></i>
@@ -126,24 +141,17 @@
                     <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fas fa-align-justify"></i>
                     </button>
-                    <div class="collapse navbar-collapse invisible" id="navbarSupportedContent">
-                        <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link"></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"> </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"></a>
-                            </li>
-                            @*<li class="nav-item">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link">Tipo Usuario: @Context.Session.GetString("TipoUsuario")</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" asp-controller="Login" asp-action="Index">Salir</a>
-                                </li>*@
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>

@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using Microsoft.AspNetCore.Http;
+@using System.Data;
+@model MunicipalidadDM.Entities.ClienteEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h3>Consultas a propiedades del usuario: @Context.Session.GetString("NombreUsuario")</h3>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item nav-link small text-uppercase active" id="liCliente">
+                <a href="#ClienteTab" id="clienteButton" data-toggle="tab"><h5>Propiedades</h5></a>
+            </li>
+            <li class="nav-item nav-link small text-uppercase" id="liConsulta">
+                <a href="#ConsultaTab" id="consultaButton" data-toggle="tab"><h5>Consulta</h5></a>
+            </li>
+        </ul>
+
+        <div class="tab-content ">
+            <div class="tab-pane active" id="ClienteTab">
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_usuario">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Num Finca</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Ver Recibos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        @for (int i = 0; i < Model.Propiedades.Rows.Count; i++)
+                        {
+                            var id = @Model.Propiedades.Rows[i]["id"].ToString();
+                            var numFinca = @Model.Propiedades.Rows[i]["numFinca"].ToString();
+                            var valor = @Model.Propiedades.Rows[i]["valor"].ToString();
+                            var direccion = @Model.Propiedades.Rows[i]["direccion"].ToString();
+                        <tr>
+                            <th scope="row">@id</th>
+                            <td>@numFinca</td>
+                            <th>@valor</th>
+                            <th>@direccion</th>
+                            <td>
+                                <center><a id="@id" class="btn btn-primary" onclick="getRecibos(this.id,'@numFinca'); return false;"><span class="fas fa-check" aria-hidden="true"></span></a></center>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="ConsultaTab">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <p id="numCodigo">Id: </p>
+                    </div>
+                    <div class="form-group col-md-7">
+                        <p id="nombreCliente">Num Finca: </p>
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_Reci">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">ID Propiedad</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Fecha Vencimiento</th>
+                            <th scope="col">Monto</th>
+                            <th scope="col">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyRecibos">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $("#fondoBody").removeAttr('style');
+        $(document).ready(function () {
+            $('#tbl_propietario').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "bSort": false,
+                dom: 'Bfrtip',
+            });
+        });
+
+        function getRecibos(id, nombre) {
+            document.getElementById("consultaButton").click();
+            $("#numCodigo").text('Id: ' + id);
+            $("#nombreCliente").text('Num Finca: ' + nombre);
+            $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
+                url: "../../PropiedadUsuarioCliente/GetRecibos",
+                type: "POST",
+                dataType: "json",
+                data: { idPropiedad: id },
+                success: function (result) {
+                    var registros = result;
+                    var estado = null;
+                    html = "";
+                    //alert(fechaActual);
+                    for (var i = 0; i < registros.length; i++) {
+                        html += "<tr>";
+                        html += "<td>" + registros[i]["id"] + "</td>";
+                        html += "<td>" + registros[i]["idPropiedad"] + "</td>";
+                        html += "<td>" + registros[i]["fechaActual"] + "</td>";
+                        html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
+                        html += "<td>" + registros[i]["monto"] + "</td>";
+                        if (registros[i]["estado"] == 0) {
+                            estado = "Pendiente";
+                        }
+                        if(registros[i]["estado"] == 1) {
+                            estado = "<center><a id='" + registros[i]["id"] + "' class='btn btn-primary border-0 rounded-0 p-0;' onclick='verComprobante(this.id); return false;'><i class='fa fa-play' aria-hidden='true'></i><span>Ver Comprobantes</span></a></center>";
+                        }
+                        if(registros[i]["estado"] == 2) {
+                            estado = "Anulado";
+                        }
+                        html += "<td>" + estado + "</td>";
+                    };
+                    $("#tbodyRecibos").html(html);
+                    $('#tbl_Recibo').DataTable({
+                        destroy: true,
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                        },
+                        "bSort": false,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copyHtml5'
+                        ]
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
