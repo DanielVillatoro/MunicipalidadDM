@@ -24,8 +24,15 @@ namespace MunicipalidadDM.Controllers
         {
             Models.UsuarioModel model = new Models.UsuarioModel();
             string idUsuario = HttpContext.Session.GetString("IdUsuario");
-            DataTable datosPropiedades = model.GetRecibos(idUsuario, idPropiedad);
-            return Json(datosPropiedades);
+            DataTable datos = model.GetRecibos(idUsuario, idPropiedad);
+            return Json(datos);
+        }
+
+        public JsonResult GetComprobantes(string idRecibo)
+        {
+            Models.UsuarioModel model = new Models.UsuarioModel();
+            DataTable datos = model.GetComprobante(idRecibo);
+            return Json(datos);
         }
     }
 }

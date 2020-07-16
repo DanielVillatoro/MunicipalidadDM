@@ -18,14 +18,14 @@ namespace MunicipalidadDM.Models
             return datos;
         }
 
-        public void AddUsuario(string Usuario, string Contrasena, string Rol) {
-            SqlCommand query = new SqlCommand(string.Format("EXEC InsertUsuario " + Usuario + "," + Contrasena + "," + Rol), ConexionBD.ObtenerConexion());
+        public void AddUsuario(string Usuario, string Contrasena, string Rol, string fecha, string idUserAdmin, string ip) {
+            SqlCommand query = new SqlCommand(string.Format("EXEC InsertUsuario '" + Usuario + "','" + Contrasena + "','" + Rol + "','" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
 
-        public void ActualizaUsuario(int Id, string Usuario, string Contrasena, string Rol,int Tipo)
+        public void ActualizaUsuario(int Id, string Usuario, string Contrasena, string Rol,int Tipo, string fecha, string idUserAdmin, string ip)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC EditDeleteUsuario "+Id+","+Usuario+","+Contrasena+","+Rol+","+ Tipo), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC EditDeleteUsuario "+Id+",'"+Usuario+"','"+Contrasena+"','"+Rol+"',"+ Tipo + ",'" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
 
@@ -51,6 +51,15 @@ namespace MunicipalidadDM.Models
         {
             DataTable datos = new DataTable();
             SqlCommand query = new SqlCommand(string.Format("EXEC GetRecibosPropiedadesUsuario " + Convert.ToInt32(idUsuario)+","+ Convert.ToInt32(idPropiedad)), ConexionBD.ObtenerConexion());
+            SqlDataAdapter ada = new SqlDataAdapter(query);
+            ada.Fill(datos);
+            return datos;
+        }
+
+        public DataTable GetComprobante(string id)
+        {
+            DataTable datos = new DataTable();
+            SqlCommand query = new SqlCommand(string.Format("EXEC GetComprobantesReciboPropiedadUsuario " + Convert.ToInt32(id)), ConexionBD.ObtenerConexion());
             SqlDataAdapter ada = new SqlDataAdapter(query);
             ada.Fill(datos);
             return datos;

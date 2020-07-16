@@ -1,0 +1,152 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using Microsoft.AspNetCore.Http;
+@using System.Data;
+@model MunicipalidadDM.Entities.ClienteEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+
+</head>
+
+<body>
+    <div class="container">
+        <h3>Consultas a bitacora de cambios</h3>
+        <div class="col border border-primary">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <select class="form-control form-control-sm" id="selectEntidad">
+                        <option value="1">Propiedad</option>
+                        <option value="2">Propietario</option>
+                        <option value="3">Usuario</option>
+                        <option value="4">PropiedadVsPropietario</option>
+                        <option value="5">PropiedadVsUsuario</option>
+                        <option value="6">Propiedad Juridico</option>
+                        <option value="7">Concepto Cobro</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrependFecha" style="background-color:#004f90; color: #ffffff;"><strong>Fecha1</strong></span>
+                        </div>
+                        <input id="fechaInput" type="date" class="form-control form-control-sm" aria-describedby="inputGroupPrependFecha" required>
+                        <div class="invalid-feedback">
+                            Seleccione una fecha valida.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupPrependFecha" style="background-color:#004f90; color: #ffffff;"><strong>Fecha2</strong></span>
+                        </div>
+                        <input id="fechaInput2" type="date" class="form-control form-control-sm" aria-describedby="inputGroupPrependFecha" required>
+                        <div class="invalid-feedback">
+                            Seleccione una fecha valida.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <button type="button" class="btn btn-primary float-right" onclick="verBitacora()" style="background-color: #003f73; border-color: #152947;">Ver Bitacora</button>
+                </div>
+            </div>
+        </div>
+
+
+        <table class="table table-striped table-bordered dt-responsive nowrap table-responsive" id="tbl_Json">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre Entidad</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Insertado Por</th>
+                    <th scope="col">JsonAntes</th>
+                    <th scope="col">JsonDespues</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyJson">
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <script src="~/js/bs-modal-fullscreen.js"></script>
+    <script type="text/javascript">
+        $("#fondoBody").removeAttr('style');
+                var GlobalDatatablePropiedades = 0;
+var GlobalTablePropiedades = null;
+        function verBitacora() {
+            var idEntidad = document.getElementById("selectEntidad").value;//$('#selectEntidad').find(":selected").text();
+            var nombre = $('#selectEntidad').find(":selected").text();
+            var fecha1 = document.getElementById("fechaInput").value;
+            var fecha2 = document.getElementById("fechaInput2").value;
+            $("#tbodyJson").empty();
+                if (GlobalDatatablePropiedades == 1) {
+                    GlobalTablePropiedades.destroy();
+                }
+            if (idEntidad != null && fecha1 != "" && fecha2 != "") {
+                $.ajax({
+                    url: "../../Bitacora/GetBitacora",
+                    type: "POST",
+                    dataType: "json",
+                    data: { idEntidad: idEntidad,fecha1:fecha1,fecha2:fecha2 },
+                    success: function (result) {
+                        var registros = result;
+                        html = "";
+                        //alert(fechaActual);
+                        for (var i = 0; i < registros.length; i++) {
+                            html += "<tr>";
+                            html += "<td>" + registros[i]["id"] + "</td>";
+                            html += "<td>" + nombre + "</td>";
+                            html += "<td>" + registros[i]["insertedAt"] + "</td>";
+                            html += "<td>" + registros[i]["insertedBy"] + "</td>";
+                            html += "<td><pre><code>" + registros[i]["jsonAntes"] + "</code></pre></td>";
+                            html += "<td><pre><code>" + registros[i]["jsonDespues"] + "</code></pre></td>";
+                        };
+                        $("#tbodyJson").html(html);
+                        GlobalTablePropiedades=$('#tbl_Json').DataTable({
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                            },
+                            "bSort": false,
+                            dom: 'Bfrtip',
+                            buttons: [
+                                'copyHtml5'
+                            ]
+                        });
+                        GlobalDatatablePropiedades = 1;
+                        $('#myModal').modal('show');
+                    }
+                });
+            }
+            else {
+                alertify.error('Error.Debe ingresar todos los datos');
+            }
+        }
+    </script>
+</body>
+</html>
+
+

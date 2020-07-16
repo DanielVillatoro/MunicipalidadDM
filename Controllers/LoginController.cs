@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using MunicipalidadDM.Models;
 using Newtonsoft.Json;
+using System.Net;
 //using ExosData.Entities;
 
 namespace MunicipalidadDM.Controllers
@@ -25,6 +26,9 @@ namespace MunicipalidadDM.Controllers
             DataTable dtResultado = modeloLogin.ValidacionLogin(username, pass);
             if (dtResultado.Rows.Count>0)
             {
+                IPHostEntry heserver = Dns.GetHostEntry(Dns.GetHostName());
+                string ip = heserver.AddressList[1].ToString();
+                HttpContext.Session.SetString("IpUsuario", ip);
                 HttpContext.Session.SetString("TipoUsuario", dtResultado.Rows[0]["tipo"].ToString());
                 HttpContext.Session.SetString("IdUsuario", dtResultado.Rows[0]["id"].ToString());
                 HttpContext.Session.SetString("NombreUsuario", dtResultado.Rows[0]["nombre"].ToString());

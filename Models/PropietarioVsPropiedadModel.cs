@@ -8,14 +8,14 @@ namespace MunicipalidadDM.Models
 {
     public class PropietarioVsPropiedadModel
     {
-        public void AddRelacion(int IdPropietario,int IdPropiedad)
+        public void AddRelacion(int IdPropietario,int IdPropiedad, string fecha, string idUserAdmin, string ip)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC AsociacionPropietarioPropiedad " + IdPropietario + "," + IdPropiedad), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC AsociacionPropietarioPropiedad " + IdPropietario + "," + IdPropiedad + ",'" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
-        public void EliminaRelacion(int IdPropietario, int IdPropiedad)
+        public void EliminaRelacion(int IdPropietario, int IdPropiedad, string fecha, string idUserAdmin, string ip)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC DeletePropiedadPropietario " + IdPropietario + "," + IdPropiedad), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC DeletePropiedadPropietario " + IdPropietario + "," + IdPropiedad + ",'" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
     }

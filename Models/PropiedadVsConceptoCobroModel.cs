@@ -18,14 +18,14 @@ namespace MunicipalidadDM.Models
             return datos;
         }
 
-        public void AddRelacion(int IdUsuario, int IdPropiedad)
+        public void AddRelacion(int IdProp, int IdServicio)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC AsociacionServicioPropiedad " + IdUsuario + "," + IdPropiedad), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC AsociacionServicioPropiedad " + IdServicio + "," + IdProp), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
-        public void EliminaRelacion(int IdUsuario, int IdPropiedad)
+        public void EliminaRelacion(int IdProp, int IdServicio)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC DeletePropiedadConceptoCobro " + IdUsuario + "," + IdPropiedad), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC DeletePropiedadConceptoCobro " + IdServicio + "," + IdProp), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
 

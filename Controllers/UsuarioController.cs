@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MunicipalidadDM.Controllers
@@ -21,21 +22,30 @@ namespace MunicipalidadDM.Controllers
         public int AddUser(string Usuario, string Contrasena, string Rol)
         {
             Models.UsuarioModel Model = new Models.UsuarioModel();
-            Model.AddUsuario(Usuario, Contrasena, Rol);
+            string DateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string idUsuario = HttpContext.Session.GetString("NombreUsuario");
+            string ipUsuario = HttpContext.Session.GetString("IpUsuario");
+            Model.AddUsuario(Usuario, Contrasena, Rol, DateString, idUsuario, ipUsuario);
             return 1;
         }
 
         public int EditUser(int Id, string Usuario, string Contrasena, string Rol)
         {
             Models.UsuarioModel Model = new Models.UsuarioModel();
-            Model.ActualizaUsuario(Id,Usuario,Contrasena,Rol,0);
+            string DateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string idUsuario = HttpContext.Session.GetString("NombreUsuario");
+            string ipUsuario = HttpContext.Session.GetString("IpUsuario");
+            Model.ActualizaUsuario(Id,Usuario,Contrasena,Rol,0, DateString, idUsuario, ipUsuario);
             return 1;
         }
 
         public int DeleteUser(int Id)
         {
             Models.UsuarioModel Model = new Models.UsuarioModel();
-            Model.ActualizaUsuario(Id, "nulo", "nulo", "nulo", 1);
+            string DateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string idUsuario = HttpContext.Session.GetString("NombreUsuario");
+            string ipUsuario = HttpContext.Session.GetString("IpUsuario");
+            Model.ActualizaUsuario(Id, "nulo", "nulo", "nulo", 1, DateString, idUsuario, ipUsuario);
             return 1;
         }
     }

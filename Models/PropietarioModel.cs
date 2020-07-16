@@ -36,15 +36,15 @@ namespace MunicipalidadDM.Models
             return datos;
         }
 
-        public void AddPropietario(string Nombre,string NumDoc,string TipoDoc)
+        public void AddPropietario(string Nombre,string NumDoc,string TipoDoc, string fecha, string idUserAdmin, string ip)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC InsertPropietario " + Nombre + "," + NumDoc + "," + TipoDoc), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC InsertPropietario '" + Nombre + "'," +Convert.ToInt32(NumDoc) + "," + Convert.ToInt32(TipoDoc) + ",'" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
 
-        public void ActualizaPropietario(int Id, string nombre, string valorDoc, string TipoDoc, int Tipo)
+        public void ActualizaPropietario(int Id, string nombre, string valorDoc, string TipoDoc, int Tipo, string fecha, string idUserAdmin, string ip)
         {
-            SqlCommand query = new SqlCommand(string.Format("EXEC EditDeletePropietario " + Id + "," + nombre + "," + valorDoc + "," + TipoDoc + "," + Tipo), ConexionBD.ObtenerConexion());
+            SqlCommand query = new SqlCommand(string.Format("EXEC EditDeletePropietario " + Id + ",'" + nombre + "'," + Convert.ToInt32(valorDoc) + "," + Convert.ToInt32(TipoDoc) + "," + Tipo + ",'" + fecha + "','" + idUserAdmin + "','" + ip + "'"), ConexionBD.ObtenerConexion());
             query.ExecuteNonQuery();
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MunicipalidadDM.Controllers
@@ -20,15 +22,22 @@ namespace MunicipalidadDM.Controllers
 
         public int AddRelacion(string IdPropietario, string IdPropiedad)
         {
+
             Models.UsuarioVsPropiedadModel Model = new Models.UsuarioVsPropiedadModel();
-            Model.AddRelacion(Convert.ToInt32(IdPropietario), Convert.ToInt32(IdPropiedad));
+            string DateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string idUsuario = HttpContext.Session.GetString("NombreUsuario");
+            string ipUsuario= HttpContext.Session.GetString("IpUsuario");
+            Model.AddRelacion(Convert.ToInt32(IdPropietario), Convert.ToInt32(IdPropiedad), DateString, idUsuario, ipUsuario);
             return 1;
         }
 
         public int DeleteRelacion(string IdPropietario, string IdPropiedad)
         {
             Models.UsuarioVsPropiedadModel Model = new Models.UsuarioVsPropiedadModel();
-            Model.EliminaRelacion(Convert.ToInt32(IdPropietario), Convert.ToInt32(IdPropiedad));
+            string DateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string idUsuario = HttpContext.Session.GetString("NombreUsuario");
+            string ipUsuario = HttpContext.Session.GetString("IpUsuario");
+            Model.EliminaRelacion(Convert.ToInt32(IdPropietario), Convert.ToInt32(IdPropiedad), DateString, idUsuario, ipUsuario);
             return 1;
         }
 

@@ -90,7 +90,6 @@ function GetPropiedades() {
         dataType: "json",
         success: function (result) {
             var registros = result; 
-            alert(registros);
             html = "";
             //alert(fechaActual);
             for (var i = 0; i < registros.length; i++) {
