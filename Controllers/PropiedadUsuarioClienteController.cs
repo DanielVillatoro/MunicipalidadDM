@@ -34,5 +34,29 @@ namespace MunicipalidadDM.Controllers
             DataTable datos = model.GetComprobante(idRecibo);
             return Json(datos);
         }
+
+        public string GetTotalPago(string JsonTotalRecibo, string JsonTotalPago)
+        {
+            JsonResult elementoTotalRecibo = Json(JsonTotalRecibo);
+            JsonResult elementoTotalPago= Json(JsonTotalPago);
+            Models.UsuarioModel model = new Models.UsuarioModel();
+            DataTable datos = model.GetMontoTotal(JsonTotalPago.ToString());
+            return datos.Rows[0]["montoTotal"].ToString();
+        }
+
+        public JsonResult GetCP(string idPropiedad)
+        {
+            Models.UsuarioModel model = new Models.UsuarioModel();
+            DataTable datos = model.GetCP(idPropiedad);
+            return Json(datos);
+        }
+
+        public JsonResult GetRecibosCP(string idCP)
+        {
+            Models.UsuarioModel model = new Models.UsuarioModel();
+            DataTable datos = model.GetRecibosCP(idCP);
+            return Json(datos);
+        }
+        
     }
 }
