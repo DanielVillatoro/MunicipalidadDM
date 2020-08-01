@@ -50,7 +50,7 @@
                 <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_usuario">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
+                            @*<th scope="col">ID</th>*@
                             <th scope="col">Num Finca</th>
                             <th scope="col">Valor</th>
                             <th scope="col">Dirección</th>
@@ -65,7 +65,7 @@
                             var valor = @Model.Propiedades.Rows[i]["valor"].ToString();
                             var direccion = @Model.Propiedades.Rows[i]["direccion"].ToString();
                             <tr>
-                                <th scope="row">@id</th>
+                                @*<th scope="row">@id</th>*@
                                 <td>@numFinca</td>
                                 <th>@valor</th>
                                 <th>@direccion</th>
@@ -81,9 +81,9 @@
             <div class="tab-pane" id="ConsultaTab">
                 <h3>Recibos pendientes, pagados y sus respectivos comprobantes de pago.</h3>
                 <div class="form-row">
-                    <div class="form-group col-md-2">
+                    @*<div class="form-group col-md-2">
                         <p id="numCodigo">Id: </p>
-                    </div>
+                    </div>*@
                     <div class="form-group col-md-7">
                         <p id="nombreCliente">Num Finca: </p>
                     </div>
@@ -91,8 +91,8 @@
                 <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_Reci">
                     <thead>
                         <tr>
-                            <th scope="col"># Recibo</th>
-                            <th scope="col">ID Propiedad</th>
+                            @*<th scope="col"># Recibo</th>*@
+                            @*<th scope="col">ID Propiedad</th>*@
                             <th scope="col">Tipo CC</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Fecha Vencimiento</th>
@@ -108,21 +108,21 @@
             <div class="tab-pane" id="ReciboPendienteTab">
                 <h3>Recibos pendientes.</h3>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    @*<div class="form-group col-md-4">
                         <p id="numCodigoRP">Id: </p>
-                    </div>
-                    <div class="form-group col-md-6">
+                    </div>*@
+                    <div class="form-group col-md-10">
                         <p id="nombreClienteRP">Num Finca: </p>
                     </div>
                     <div class="form-group col-md-2">
-                        <button class='btn btn-success' onclick="cotizaRecibos()" data-toggle="modal" data-target="#exampleModalCenter">Cotizar</button>
+                        <button class='btn btn-success' onclick="cotizaRecibos()">Cotizar</button>
                     </div>
                 </div>
                 <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_RecibosPendientes">
                     <thead>
                         <tr>
-                            <th scope="col"># Recibo</th>
-                            <th scope="col">ID Propiedad</th>
+                            @*<th scope="col"># Recibo</th>
+                            <th scope="col">ID Propiedad</th>*@
                             <th scope="col">Tipo CC</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Fecha Vencimiento</th>
@@ -138,9 +138,9 @@
             <div class="tab-pane" id="ComprobantePagoTab">
                 <h3>Comprobantes de pago.</h3>
                 <div class="form-row">
-                    <div class="form-group col-md-2">
+                    @*<div class="form-group col-md-2">
                         <p id="numCodigoCP">Id: </p>
-                    </div>
+                    </div>*@
                     <div class="form-group col-md-7">
                         <p id="nombreClienteCP">Num Finca: </p>
                     </div>
@@ -148,9 +148,10 @@
                 <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_CP">
                     <thead>
                         <tr>
-                            <th scope="col"># Comprobante</th>
+                            @*<th scope="col"># Comprobante</th>*@
                             <th scope="col">Fecha</th>
                             <th scope="col">Monto</th>
+                            <th scope="col">Descripción</th>
                             <th scope="col">Seleccionar</th>
                         </tr>
                     </thead>
@@ -170,8 +171,9 @@
                         <table class='table table-striped table-bordered dt-responsive nowrap' id='tbl_comprobante'>
                             <thead>
                                 <tr>
-                                    <th scope="col"># Comprobante</th>
+                                    @*<th scope="col"># Comprobante</th>*@
                                     <th scope="col">Fecha</th>
+                                    <th scope="col">Descripción</th>
                                     <th scope="col">Monto</th>
                                 </tr>
                             </thead>
@@ -187,7 +189,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        @*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -201,11 +203,54 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary">Pagar Recibos</button>
+                        <button type="button" class="btn btn-primary" onclick="pagarRecibos()">Pagar Recibos</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+        <div class="modal fade modal-fullscreen" id="myModalRP" tabindex="-1" role="dialog" aria-labelledby="myModalLabelRP">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabelRP"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="modalBodyContent">
+                        <table class="table table-striped table-bordered dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    @*<th scope="col"><center>Interes</center></th>*@
+                                    <th scope="col"><center>Monto Total</center></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyDatosTotal">
+                            </tbody>
+                        </table>
+                        <table class='table table-striped table-bordered dt-responsive nowrap'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tipo CC</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Fecha Vencimiento</th>
+                                    <th scope="col">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id='tbody_recibosRP'>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="pagarRecibos()">Pagar Recibos</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
 
         <div class="modal fade modal-fullscreen" id="myModalCP" tabindex="-1" role="dialog" aria-labelledby="myModalLabelCP">
             <div class="modal-dialog" role="document">
@@ -215,11 +260,11 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body" id="modalBodyContent">
-                        <table class='table table-striped table-bordered dt-responsive nowrap' >
+                        <table class='table table-striped table-bordered dt-responsive nowrap'>
                             <thead>
                                 <tr>
-                                    <th scope="col"># Recibo</th>
-                                    <th scope="col">ID Propiedad</th>
+                                    @*<th scope="col"># Recibo</th>
+                                    <th scope="col">ID Propiedad</th>*@
                                     <th scope="col">Tipo CC</th>
                                     <th scope="col">Fecha</th>
                                     <th scope="col">Fecha Vencimiento</th>

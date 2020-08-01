@@ -1,0 +1,377 @@
+﻿@{
+    ViewData["Title"] = "Arreglos de pago";
+    Layout = "_Layout";
+}
+@using System.Data;
+@model MunicipalidadDM.Entities.UsuarioEntitie;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="~/CDNfiles/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Municipalidad DM</title>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/buttons.print.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/CDNfiles/dataTable/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/CDNfiles/dataTable/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h3>Arreglos de Pago</h3>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item nav-link small text-uppercase active" id="liCliente">
+                <a href="#ClienteTab" id="clienteButton" data-toggle="tab"><h5>Usuarios</h5></a>
+            </li>
+            <li class="nav-item nav-link small text-uppercase" id="liPropiedad">
+                <a href="#PropiedadTab" id="propiedadButton" data-toggle="tab"><h5>Propiedades</h5></a>
+            </li>
+            <li class="nav-item nav-link small text-uppercase" id="liConsulta">
+                <a href="#ConsultaTab" id="consultaButton" data-toggle="tab"><h5>Consulta</h5></a>
+            </li>
+        </ul>
+
+        <div class="tab-content ">
+            <div class="tab-pane active" id="ClienteTab">
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_usuario">
+                    <thead>
+                        <tr>
+                            @*<th scope="col">ID</th>*@
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        @for (int i = 0; i < Model.UsuarioDB.Rows.Count; i++)
+                        {
+                            var id = @Model.UsuarioDB.Rows[i]["id"].ToString();
+                            var nombre = @Model.UsuarioDB.Rows[i]["nombre"].ToString();
+                            var contrasena = @Model.UsuarioDB.Rows[i]["password"].ToString();
+                            <tr>
+                                @*<th scope="row">@id</th>*@
+                                <td>@nombre</td>
+                                <th>@Model.UsuarioDB.Rows[i]["tipoUsuario"].ToString()</th>
+                                <td>
+                                    <center><a id="@id" class="btn btn-primary" onclick="getDatosCliente(this.id,'@nombre'); return false;"><span class="fas fa-check" aria-hidden="true"></span></a></center>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="PropiedadTab">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <p id="nombreCliente">Cliente: </p>
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_propiedades">
+                    <thead>
+                        <tr>
+                            @*<th scope="col">ID</th>*@
+                            <th scope="col">Num Finca</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyPropiedades">
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="tab-pane" id="ConsultaTab">
+                <div class="form-row">
+                    @*<div class="form-group col-md-2">
+                            <p id="numCodigoRE">Id: </p>
+                        </div>*@
+                    <div class="form-group col-md-5">
+                        <p id="nombreClienteRE">Cliente: </p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrependPlazo" style="background-color:#004f90; color: #ffffff;"><strong>Plazo:</strong></span>
+                            </div>
+                            <input id="plazoNum" type="number" class="form-control form-control-sm" aria-describedby="inputGroupPrependPlazo">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button class='btn btn-success float-right' onclick="cotizaAP()" style="margin-right: 10px;">Cotizar</button>
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered dt-responsive nowrap" id="tbl_recibo">
+                    <thead>
+                        <tr>
+                            @*<th scope="col"># Recibo</th>*@
+                            @*<th scope="col">ID Propiedad</th>*@
+                            <th scope="col">Tipo CC</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Fecha Vencimiento</th>
+                            <th scope="col">Monto</th>
+                            <th scope="col">Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyRecibo">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        @*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Cotización</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><center>Total Interes</center></th>
+                                        <th scope="col"><center>Total Arreglo</center></th>
+                                        <th scope="col"><center>Cuota Mensual</center></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyDatosAP">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="creAP()">Crear AP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+        <div class="modal fade modal-fullscreen" id="myModalRP" tabindex="-1" role="dialog" aria-labelledby="myModalLabelRP">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabelRP"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="modalBodyContent">
+                        <table class="table table-striped table-bordered dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><center>Total Interes</center></th>
+                                    <th scope="col"><center>Total Arreglo</center></th>
+                                    <th scope="col"><center>Cuota Mensual</center></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyDatosTotal">
+                            </tbody>
+                        </table>
+                        <table class='table table-striped table-bordered dt-responsive nowrap'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tipo CC</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Fecha Vencimiento</th>
+                                    <th scope="col">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id='tbody_recibosRP'>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="pagarRecibos()">Crear RP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/bs-modal-fullscreen.js"></script>
+    <script type="text/javascript">
+        var GlobalIdUsuario = null;
+        var GlobalNombreUsuario = null;
+        var GlobalIdProp = null;
+        $("#fondoBody").removeAttr('style');
+        $(document).ready(function () {
+            $('#tbl_propietario').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "bSort": false,
+                dom: 'Bfrtip',
+            });
+        });
+
+        function getDatosCliente(id, nombre) {
+            document.getElementById("propiedadButton").click();
+            GlobalIdUsuario = id;
+            GlobalNombreUsuario = nombre;
+            //$("#numCodigo").text('Id: ' + id);
+            $("#nombreCliente").text('Cliente: ' + nombre);
+            $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
+                url: "../../PropiedadUsuario/GetPropiedades",
+                type: "POST",
+                dataType: "json",
+                data: { IdCliente: id },
+                success: function (result) {
+                    var registros = result;
+                    html = "";
+                    //alert(fechaActual);
+                    for (var i = 0; i < registros.length; i++) {
+                        html += "<tr>";
+                        //html += "<td>" + registros[i]["id"] + "</td>";
+                        html += "<td>" + registros[i]["numFinca"] + "</td>";
+                        html += "<td>" + registros[i]["valor"] + "</td>";
+                        html += "<td>" + registros[i]["direccion"] + "</td>";
+                        html += "<td><center><a class='btn btn-primary' onclick='getRecibos(" + registros[i]["id"] + ")'><span class='fas fa-check' aria-hidden='true'></span></a></center></td>";
+                    };
+                    $("#tbodyPropiedades").html(html);
+                }
+            });
+        }
+
+        function getRecibos(idProp) {
+            document.getElementById("consultaButton").click();
+            datosRecibo = [];
+            objetoRecibo = {};
+            //$("#numCodigoRE").text('Id: ' + GlobalIdUsuario);
+            $("#nombreClienteRE").text('Cliente: ' + GlobalNombreUsuario);
+            $.ajax({
+                url: "../../CreaAP/GetRecibos",
+                type: "POST",
+                dataType: "json",
+                data: { IdCliente: GlobalIdUsuario, IdProp: idProp },
+                success: function (result) {
+                    var registros = result;
+                    html = "";
+                    //alert(fechaActual);
+                    for (var i = 0; i < registros.length; i++) {
+                        if (registros[i]["estado"] == 0) {
+                            html += "<tr>";
+                            //html += "<td>" + registros[i]["id"] + "</td>";
+                            //html += "<td>" + registros[i]["idPropiedad"] + "</td>";
+                            html += "<td id='" + registros[i]["id"] + "CC' value='" + registros[i]["idCC"] + "'>" + registros[i]["nombreCC"] + "</td>";
+                            html += "<td>" + registros[i]["fechaActual"] + "</td>";
+                            html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
+                            html += "<td id='" + registros[i]["id"] + "monto'>" + registros[i]["monto"] + "</td>";
+                            html += "<td><center><input class='orm-check-input position-static' id='" + registros[i]["id"] + "check' type='checkbox' value='" + registros[i]["id"] + "' name='recibos[]'></center></td>";
+                        }
+                    };
+                    $("#tbodyRecibo").html(html);
+                }
+            });
+        }
+
+
+        var datosPago = [];
+        var objetoPago = {};
+
+        function cotizaAP() {
+            datosPago = [];
+            var selected = '';
+            $('input[type=checkbox]').each(function () {
+                if (this.checked) {
+                    selected += $(this).val() + ', ';//ID
+                    datosPago.push({
+                        "id": $(this).val()
+                    });
+                }
+            });
+            if (selected != '') {
+                objetoPago.datosPago = datosPago;
+                var plazo = document.getElementById("plazoNum").value;
+                $.ajax({
+                    url: "../../CreaAP/GetTotalAP",
+                    type: "POST",
+                    dataType: "json",
+                    data: { JsonTotalPago: JSON.stringify(objetoPago), Plazo: plazo },
+                    success: function (result) {
+                        html = "";
+                        var html2 = "";
+                        var montoTotal = 0;
+                        var registros = result;
+                        for (var i = 0; i < registros.length; i++) {
+                            //html += "<tr>";
+                            //html += "<td>" + formatNumber.new((parseFloat(registros[0]["interesesMoratorios"])).toFixed(2)) + "</td>";
+                            //html += "<td>" + formatNumber.new((parseFloat(registros[0]["montoTotal"])+parseFloat(registros[0]["interesesMoratorios"])).toFixed(2)) + "</td>";
+                            //html += "<td>" + formatNumber.new((parseFloat(registros[0]["cuota"])).toFixed(2)) + "</td>";
+                            //html += "</tr>";
+                            html += "<tr>";
+                            html += "<td>" + registros[i]["nombre"] + "</td>";
+                            html += "<td>" + registros[i]["fechaActual"] + "</td>";
+                            html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
+                            html += "<td id='" + registros[i]["id"] + "monto'>" + registros[i]["monto"] + "</td>";
+                            html += "</tr>";
+                            montoTotal += registros[i]["monto"];
+                        };
+                        //$("#tbodyDatosAP").html(html);
+                        //$('#exampleModalCenter').modal('show');
+                        html2 += "<tr><td style='text-align: center; font-size: 25px;'>" + formatNumber.new((parseFloat(registros[0]["interesesMoratorios"])).toFixed(2)) + "</td>";
+                        html2 += "<td style='text-align: center; font-size: 25px;'>" + formatNumber.new((parseFloat(registros[0]["montoTotal"])+parseFloat(registros[0]["interesesMoratorios"])).toFixed(2)) + "</td>";
+                        html2 += "<td style='text-align: center; font-size: 25px;'>" + formatNumber.new((parseFloat(registros[0]["cuota"])).toFixed(2)) + "</td></tr>";
+                        $("#tbodyDatosTotal").html(html2);
+                        $("#tbody_recibosRP").html(html);
+                        $('#myModalRP').modal('show');
+                    }
+                });
+            }
+            else {
+                alert('Debes seleccionar al menos un recibo.');
+            }
+            //return false;
+        }
+
+        function creAP() {
+            $.ajax({
+                url: "../../CreaAP/CrearAP",
+                type: "POST",
+                dataType: "text",
+                data: { JsonTotalPago: JSON.stringify(objetoPago), Plazo: document.getElementById("plazoNum").value },
+                success: function (result) {
+                    alertify.success('AP realizado correctamente');
+                    location.reload();
+                }
+            });
+        }
+
+        var formatNumber = {
+            separador: ",", // separador para los miles
+            sepDecimal: '.', // separador para los decimales
+            formatear: function (num) {
+                num += '';
+                var splitStr = num.split('.');
+                var splitLeft = splitStr[0];
+                var splitRight = splitStr.length > 1 ? this.sepDecimal + splitStr[1] : '';
+                var regx = /(\d+)(\d{3})/;
+                while (regx.test(splitLeft)) {
+                    splitLeft = splitLeft.replace(regx, '$1' + this.separador + '$2');
+                }
+                return this.simbol + splitLeft + splitRight;
+            },
+            new: function (num, simbol) {
+                this.simbol = simbol || '';
+                return this.formatear(num);
+            }
+        }
+    </script>
+</body>
+</html>
+
+

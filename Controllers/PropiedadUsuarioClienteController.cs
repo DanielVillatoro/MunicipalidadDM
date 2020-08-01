@@ -35,13 +35,13 @@ namespace MunicipalidadDM.Controllers
             return Json(datos);
         }
 
-        public string GetTotalPago(string JsonTotalRecibo, string JsonTotalPago)
+        public JsonResult GetTotalPago(string JsonTotalRecibo, string JsonTotalPago)
         {
             JsonResult elementoTotalRecibo = Json(JsonTotalRecibo);
             JsonResult elementoTotalPago= Json(JsonTotalPago);
             Models.UsuarioModel model = new Models.UsuarioModel();
             DataTable datos = model.GetMontoTotal(JsonTotalPago.ToString());
-            return datos.Rows[0]["montoTotal"].ToString();
+            return Json(datos);//datos.Rows[0]["montoTotal"].ToString();
         }
 
         public JsonResult GetCP(string idPropiedad)
@@ -57,6 +57,14 @@ namespace MunicipalidadDM.Controllers
             DataTable datos = model.GetRecibosCP(idCP);
             return Json(datos);
         }
-        
+
+        public string PagarRecibos(string JsonTotalPago)
+        {
+            Models.UsuarioModel model = new Models.UsuarioModel();
+            DataTable datos = model.PagarRecibos(JsonTotalPago.ToString());
+            return "1";
+        }
+
+
     }
 }

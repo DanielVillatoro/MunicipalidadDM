@@ -64,6 +64,9 @@
                             <li>
                                 <a asp-controller="PropiedadUsuarioCliente" asp-action="Index">Ver Propiedades</a>
                             </li>
+                            <li>
+                                <a asp-controller="ArregloPagoCliente" asp-action="Index">Ver Arreglos de Pago</a>
+                            </li>
                         }
                     </ul>
                 </li>
@@ -108,6 +111,13 @@
                                 <a asp-controller="PropiedadVsConceptoCobro" asp-action="Index">Propiedades vs ConceptoCobro</a>
                             </li>
                         </ul>
+                    </li>
+
+                    <li class="active">
+                        <a asp-controller="CreaAP" asp-action="Index">
+                            <i class="fas fa-money-check-alt"></i>
+                            Crear Arreglo de Pago
+                        </a>
                     </li>
                 }
                 <li class="active invisible">

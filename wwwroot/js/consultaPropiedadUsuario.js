@@ -33,7 +33,7 @@ function getRecibos() {
     document.getElementById("consultaButton").click();
     id = GlobalIdProp;
     nombre = GlobalNumFinca;
-    $("#numCodigo").text('Id: ' + id);
+    //$("#numCodigo").text('Id: ' + id);
     $("#nombreCliente").text('Num Finca: ' + nombre);
     $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
         url: "../../PropiedadUsuarioCliente/GetRecibos",
@@ -47,8 +47,8 @@ function getRecibos() {
             //alert(fechaActual);
             for (var i = 0; i < registros.length; i++) {
                 html += "<tr>";
-                html += "<td>" + registros[i]["id"] + "</td>";
-                html += "<td>" + registros[i]["idPropiedad"] + "</td>";
+                //html += "<td>" + registros[i]["id"] + "</td>";
+                //html += "<td>" + registros[i]["idPropiedad"] + "</td>";
                 html += "<td>" + registros[i]["nombreCC"] + "</td>";
                 html += "<td>" + registros[i]["fechaActual"] + "</td>";
                 html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
@@ -95,8 +95,9 @@ function verComprobante(id) {
             //alert(fechaActual);
             for (var i = 0; i < registros.length; i++) {
                 html += "<tr>";
-                html += "<td>" + registros[i]["id"] + "</td>";
+                //html += "<td>" + registros[i]["id"] + "</td>";
                 html += "<td>" + registros[i]["fecha"] + "</td>";
+                html += "<td>" + registros[i]["descripcion"] + "</td>";
                 html += "<td>" + registros[i]["totalPagado"] + "</td>";
             };
             $("#tbody_comprobantes").html(html);
@@ -123,7 +124,7 @@ function getRecibosPendientes() {
     objetoRecibo = {};
     id = GlobalIdProp;
     nombre = GlobalNumFinca;
-    $("#numCodigoRP").text('Id: ' + id);
+    //$("#numCodigoRP").text('Id: ' + id);
     $("#nombreClienteRP").text('Num Finca: ' + nombre);
     $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
         url: "../../PropiedadUsuarioCliente/GetRecibos",
@@ -138,8 +139,8 @@ function getRecibosPendientes() {
             for (var i = 0; i < registros.length; i++) {
                 if (registros[i]["estado"] == 0) {
                     html += "<tr>";
-                    html += "<td>" + registros[i]["id"] + "</td>";
-                    html += "<td>" + registros[i]["idPropiedad"] + "</td>";
+                    //html += "<td>" + registros[i]["id"] + "</td>";
+                    //html += "<td>" + registros[i]["idPropiedad"] + "</td>";
                     html += "<td id='" + registros[i]["id"] + "CC' value='" + registros[i]["idCC"] + "'>" + registros[i]["nombreCC"] + "</td>";
                     html += "<td>" + registros[i]["fechaActual"] + "</td>";
                     html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
@@ -179,10 +180,26 @@ function cotizaRecibos() {
         $.ajax({
             url: "../../PropiedadUsuarioCliente/GetTotalPago",
             type: "POST",
-            dataType: "text",
+            dataType: "json",
             data: { JsonTotalRecibo: JSON.stringify(objetoRecibo), JsonTotalPago: JSON.stringify(objetoPago) },
             success: function (result) {
-                $("#totalPagotxt").text('Total a pagar: ' + formatNumber.new((parseFloat(result)).toFixed(2)));
+                //$("#totalPagotxt").text('Total a pagar: ' + formatNumber.new((parseFloat(result)).toFixed(2)));
+                var registros = result;
+                var montoTotal = 0;
+                html = "";
+                console.log(result);
+                for (var i = 0; i < registros.length; i++) {
+                    html += "<tr>";
+                    html += "<td>" + registros[i]["nombreCC"] + "</td>";
+                    html += "<td>" + registros[i]["fechaActual"] + "</td>";
+                    html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
+                    html += "<td id='" + registros[i]["id"] + "monto'>" + registros[i]["monto"] + "</td>";
+                    html += "</tr>";
+                    montoTotal += registros[i]["monto"];
+                };
+                $("#tbodyDatosTotal").html("<tr style='text-align: center; font-size: 25px;'><td>" + formatNumber.new((parseFloat(montoTotal)).toFixed(2))+"</td></tr>");
+                $("#tbody_recibosRP").html(html);
+                $('#myModalRP').modal('show');
             }
         });
     }
@@ -195,7 +212,7 @@ function cotizaRecibos() {
 function getCP() {
     id = GlobalIdProp;
     nombre = GlobalNumFinca;
-    $("#numCodigoCP").text('Id: ' + id);
+    //$("#numCodigoCP").text('Id: ' + id);
     $("#nombreClienteCP").text('Num Finca: ' + nombre);
     $.ajax({//CONSULTA AJAX QUE TRAE LAS FACTURAS, parametro: ID DEL CLIENTE.
         url: "../../PropiedadUsuarioCliente/GetCP",
@@ -209,8 +226,9 @@ function getCP() {
             //alert(fechaActual);
             for (var i = 0; i < registros.length; i++) {
                 html += "<tr>";
-                html += "<td>" + registros[i]["id"] + "</td>";
+                //html += "<td>" + registros[i]["id"] + "</td>";
                 html += "<td>" + registros[i]["fecha"] + "</td>";
+                html += "<td>" + registros[i]["descripcion"] + "</td>";
                 html += "<td>" + registros[i]["totalPagado"] + "</td>";
                 html += "<td><center><a id='" + registros[i]["id"] + "' class='btn btn-primary border-0 rounded-0 p-0;' onclick='verRecibosAsociados(this.id); return false;'><i class='fa fa-play' aria-hidden='true'></i><span>Ver Recibos</span></a></center></td>";
             };
@@ -232,8 +250,8 @@ function verRecibosAsociados(id) {
             //alert(fechaActual);
             for (var i = 0; i < registros.length; i++) {
                 html += "<tr>";
-                html += "<td>" + registros[i]["id"] + "</td>";
-                html += "<td>" + registros[i]["idPropiedad"] + "</td>";
+                //html += "<td>" + registros[i]["id"] + "</td>";
+                //html += "<td>" + registros[i]["idPropiedad"] + "</td>";
                 html += "<td id='" + registros[i]["id"] + "CC' value='" + registros[i]["idCC"] + "'>" + registros[i]["nombreCC"] + "</td>";
                 html += "<td>" + registros[i]["fechaActual"] + "</td>";
                 html += "<td>" + registros[i]["fechaVencimiento"] + "</td>";
@@ -246,6 +264,18 @@ function verRecibosAsociados(id) {
     });
 }
 
+function pagarRecibos() {
+    $.ajax({
+        url: "../../PropiedadUsuarioCliente/PagarRecibos",
+        type: "POST",
+        dataType: "text",
+        data: { JsonTotalPago: JSON.stringify(objetoPago) },
+        success: function (result) {
+            alertify.success('Pago realizado correctamente');
+            location.reload();
+        }
+    });
+}
 
 var formatNumber = {
     separador: ",", // separador para los miles

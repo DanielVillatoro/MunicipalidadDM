@@ -97,6 +97,21 @@ namespace MunicipalidadDM.Models
             ada.Fill(datos);
             return datos;
         }
-        
+
+        public DataTable PagarRecibos(string Json)
+        {
+            DataTable datos = new DataTable();
+            string sprocname = "PagarRecibosUsuario";
+            string paramName = "@json";
+            using (SqlCommand cmd = new SqlCommand(sprocname, ConexionBD.ObtenerConexion()))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter(paramName, Json));
+                SqlDataAdapter ada = new SqlDataAdapter(cmd);
+                ada.Fill(datos);
+            }
+            return datos;
+        }
+
     }
 }
